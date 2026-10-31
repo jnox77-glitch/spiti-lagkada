@@ -132,24 +132,21 @@ function wall(axis,a1,a2,c,t,ops,m,glazeMat){
 }
 const T=0.25, t=0.1;
 /* ---------- floor & ceiling ---------- */
-box(11.6+T,F,7.4+T,5.8,F/2,3.7,mat.concrete);
-box(1.0+T/2,F,2.4+T,12.1,F/2,1.2,mat.concrete);
+box(12.6+T,F,7.4+T,6.3,F/2,3.7,mat.concrete);
 function floor(x1,x2,z1,z2,m){const g=new THREE.Mesh(new THREE.PlaneGeometry(x2-x1,z2-z1),m);g.rotation.x=-Math.PI/2;g.position.set((x1+x2)/2,F+0.002,(z1+z2)/2);g.receiveShadow=true;scene.add(g)}
 // grey porcelain 60x120 with thin grout lines
 function tileMat(w,d){const c=document.createElement("canvas");c.width=512;c.height=256;const k=c.getContext("2d");
   k.fillStyle="#B3B4B1";k.fillRect(0,0,512,256);k.fillStyle="#9C9D9A";k.fillRect(0,0,512,3);k.fillRect(0,0,3,256);
   const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(w/1.2,d/0.6);t.encoding=THREE.sRGBEncoding;t.anisotropy=4;
   return new THREE.MeshStandardMaterial({map:t,roughness:.45})}
-floor(0,11.6,0,7.4,tileMat(11.6,7.4)); floor(11.6,12.6,0,2.4,tileMat(1.0,2.4));
+floor(0,12.6,0,7.4,tileMat(12.6,7.4));
 function ceil(x1,x2,z1,z2){const g=new THREE.Mesh(new THREE.PlaneGeometry(x2-x1,z2-z1),mat.ceiling);g.rotation.x=Math.PI/2;g.position.set((x1+x2)/2,TOP-0.01,(z1+z2)/2);scene.add(g)}
-ceil(0,11.6,0,7.4); ceil(11.6,12.6,0,2.4);
+ceil(0,12.6,0,7.4);
 
 /* ---------- exterior walls ---------- */
 wall("x",-T/2,12.6+T/2,0,T,[{a:1.6,b:3.4,lo:1.1,hi:2.2,kind:"win"},{a:5.3,b:6.2,lo:0,hi:2.3,kind:"door",mat:mat.wood},{a:7.3,b:8.2,lo:1.6,hi:2.2,kind:"win"},{a:10.0,b:11.4,lo:1.5,hi:2.2,kind:"win"}],mat.render);
-wall("z",0,2.4,12.6,T,[{a:0.7,b:1.6,lo:0,hi:2.2,kind:"door"}],mat.render);
-wall("x",11.6,12.6+T/2,2.4,T,[],mat.render);
-wall("z",2.4,7.4+T/2,11.6,T,[{a:5.6,b:7.0,lo:0.9,hi:2.4,kind:"win"}],mat.render);
-wall("x",-T/2,11.6,7.4,T,[{a:0.35,b:4.75,lo:0,hi:2.6,kind:"slide"},{a:5.95,b:7.35,lo:1.1,hi:2.4,kind:"win"},{a:9.25,b:10.65,lo:1.1,hi:2.4,kind:"win"}],mat.render);
+wall("z",0,7.4+T/2,12.6,T,[{a:0.7,b:1.6,lo:0,hi:2.2,kind:"door"},{a:5.6,b:7.0,lo:0.9,hi:2.4,kind:"win"}],mat.render);
+wall("x",-T/2,12.6,7.4,T,[{a:0.35,b:4.75,lo:0,hi:2.6,kind:"slide"},{a:6.2,b:7.6,lo:1.1,hi:2.4,kind:"win"},{a:10.0,b:11.4,lo:1.1,hi:2.4,kind:"win"}],mat.render);
 wall("z",0,7.4,0,T,[{a:0.9,b:2.1,lo:1.0,hi:2.2,kind:"win"},{a:3.45,b:4.2,lo:0.25,hi:2.6,kind:"win"},{a:6.4,b:7.15,lo:0.25,hi:2.6,kind:"win"}],mat.render);
 /* wood cladding accents: entrance bay + laundry annex */
 box(1.9,H+0.6,0.04,5.75,F+(H+0.6)/2,-0.15,mat.wood);
@@ -162,32 +159,29 @@ wall("z",0,2.4,5.0,t,[],im);
 wall("z",3.6,7.4,5.0,t,[],im);
 wall("z",0,2.4,6.4,t,[],im);
 wall("z",0,2.4,9.0,t,[{a:0.8,b:1.6,lo:0,hi:2.1,kind:"none"}],im);
-wall("x",6.4,11.6,2.4,t,[{a:6.8,b:7.6,lo:0,hi:2.1}],im);
-wall("x",5.0,11.6,3.6,t,[{a:6.8,b:7.6,lo:0,hi:2.1},{a:8.8,b:9.6,lo:0,hi:2.1}],im);
-wall("z",3.6,7.4,8.3,t,[],im);
+wall("x",6.4,12.6,2.4,t,[{a:6.8,b:7.6,lo:0,hi:2.1}],im);
+wall("x",5.0,12.6,3.6,t,[{a:7.0,b:7.8,lo:0,hi:2.1},{a:9.8,b:10.6,lo:0,hi:2.1}],im);
+wall("z",3.6,7.4,8.8,t,[],im);
 /* walk-ins with sliding mirror fronts */
-wall("z",3.6,4.8,6.8,0.08,[],im); box(1.8,2.4,0.04,5.9,F+1.2,4.8,mat.mirror);
-wall("z",3.6,4.8,9.6,0.08,[],im); box(2.0,2.4,0.04,10.6,F+1.2,4.8,mat.mirror);
-for(const [cx,w] of [[5.9,1.8],[10.6,2.0]]){box(w-0.2,1.05,0.5,cx,F+1.3,3.95,mat.fabric2);box(w,0.03,0.5,cx,F+2.1,3.95,mat.oak);box(w-0.2,0.02,0.02,cx,F+1.85,3.95,mat.alu)}
+wall("z",3.6,4.8,7.0,0.08,[],im); box(2.0,2.4,0.04,6.0,F+1.2,4.8,mat.mirror);
+wall("z",3.6,4.8,10.6,0.08,[],im); box(2.0,2.4,0.04,11.6,F+1.2,4.8,mat.mirror);
+for(const [cx,w] of [[6.0,2.0],[11.6,2.0]]){box(w-0.2,1.05,0.5,cx,F+1.3,3.95,mat.fabric2);box(w,0.03,0.5,cx,F+2.1,3.95,mat.oak);box(w-0.2,0.02,0.02,cx,F+1.85,3.95,mat.alu)}
 
 
 // hidden cove lighting in the false ceiling
 const cove=new THREE.MeshStandardMaterial({color:0xFFF1D6,emissive:0xFFD9A0,emissiveIntensity:1.1});
-for(const [x1,x2,z1,z2] of [[0,5,0,7.4],[5,8.3,3.6,7.4],[8.3,11.6,3.6,7.4],[5,11.6,2.4,3.6],[6.4,9,0,2.4],[9,12.6,0,2.4]]){
+for(const [x1,x2,z1,z2] of [[0,5,0,7.4],[5,8.8,3.6,7.4],[8.8,12.6,3.6,7.4],[5,12.6,2.4,3.6],[6.4,9,0,2.4],[9,12.6,0,2.4]]){
   const y=TOP-0.06,i=0.18;
   box(x2-x1-2*i,0.03,0.04,(x1+x2)/2,y,z1+i,cove);box(x2-x1-2*i,0.03,0.04,(x1+x2)/2,y,z2-i,cove);
   box(0.04,0.03,z2-z1-2*i,x1+i,y,(z1+z2)/2,cove);box(0.04,0.03,z2-z1-2*i,x2-i,y,(z1+z2)/2,cove)}
 /* ---------- roof ---------- */
 const R=groups.roof;
-box(11.6+T+0.3,0.3,7.4+T+0.3,5.8,TOP+0.15,3.7,mat.roof,R);
-box(1.0+0.4,0.3,2.4+T+0.3,12.15,TOP+0.15,1.2,mat.roof,R);
+box(12.6+T+0.3,0.3,7.4+T+0.3,6.3,TOP+0.15,3.7,mat.roof,R);
 const PH=0.45;
-box(12.9,PH,0.15,6.25,TOP+0.3+PH/2,-0.27,mat.render,R);
-box(11.9,PH,0.15,5.8,TOP+0.3+PH/2,7.67,mat.render,R);
+box(12.9,PH,0.15,6.3,TOP+0.3+PH/2,-0.27,mat.render,R);
+box(12.9,PH,0.15,6.3,TOP+0.3+PH/2,7.67,mat.render,R);
 box(0.15,PH,8.1,-0.27,TOP+0.3+PH/2,3.7,mat.render,R);
-box(0.15,PH,5.4,11.87,TOP+0.3+PH/2,5.0,mat.render,R);
-box(0.15,PH,2.8,12.97,TOP+0.3+PH/2,1.1,mat.render,R);
-box(1.1,PH,0.15,12.42,TOP+0.3+PH/2,2.47,mat.render,R);
+box(0.15,PH,8.1,12.87,TOP+0.3+PH/2,3.7,mat.render,R);
 /* PV rows tilted to the south */
 for(const z of [1.3,3.4,5.5])for(let i=0;i<6;i++){
   const p=new THREE.Mesh(new THREE.BoxGeometry(1.05,0.04,1.7),mat.pv);p.position.set(1.3+i*1.12+2.2,TOP+0.75,z);p.rotation.x=0.26;p.castShadow=true;R.add(p);
@@ -224,7 +218,7 @@ for(const [x,z] of [[1.8,1.65],[3.4,1.65],[1.8,2.35],[3.4,2.35]])box(0.05,0.72,0
 function bed(x,z){box(2.0,0.45,1.6,x,F+0.22,z,mat.white);box(0.08,1.0,1.7,x+1.0,F+0.5,z,mat.oak);box(1.6,0.06,1.62,x-0.15,F+0.48,z,mat.fabric2);
   box(0.45,0.5,0.4,x+0.75,F+0.25,z-1.1,mat.oak);box(0.45,0.5,0.4,x+0.75,F+0.25,z+1.1,mat.oak)}
 // bedrooms: head under the south window, closet mirror 60 cm from the foot
-for(const cx of [6.65,9.95]){box(1.6,0.45,2.0,cx,F+0.22,6.4,mat.white);box(1.7,1.0,0.08,cx,F+0.5,7.36,mat.oak);box(1.62,0.06,1.5,cx,F+0.48,6.1,mat.fabric2);
+for(const cx of [6.9,10.7]){box(1.6,0.45,2.0,cx,F+0.22,6.4,mat.white);box(1.7,1.0,0.08,cx,F+0.5,7.36,mat.oak);box(1.62,0.06,1.5,cx,F+0.48,6.1,mat.fabric2);
   box(0.4,0.5,0.4,cx-1.05,F+0.25,7.15,mat.oak);box(0.4,0.5,0.4,cx+1.05,F+0.25,7.15,mat.oak)}
 // bathroom
 box(1.0,2.0,0.02,7.0,F+1.0,1.15,mat.glass); box(0.02,2.0,1.05,7.5,F+1.0,0.6,mat.glass);
@@ -245,7 +239,7 @@ const out=new THREE.Mesh(new THREE.PlaneGeometry(200,200),M(0xA9B88A));out.rotat
 const rd=new THREE.Mesh(new THREE.PlaneGeometry(200,7),mat.road);rd.rotation.x=-Math.PI/2;rd.position.set(0,0.005,-7.6);scene.add(rd);
 function slab(x1,x2,z1,z2,m,y){const p=new THREE.Mesh(new THREE.PlaneGeometry(x2-x1,z2-z1),m);p.rotation.x=-Math.PI/2;p.position.set((x1+x2)/2,y||0.01,(z1+z2)/2);p.receiveShadow=true;scene.add(p)}
 slab(-9.2,-4.6,-4,0,mat.path); slab(-9.6,-1.0,0,5.5,mat.path); slab(4.6,7.0,-4,-0.2,mat.path);
-slab(-0.3,11.9,-0.3,0,mat.path,0.012);
+slab(-0.3,12.9,-0.3,0,mat.path,0.012);
 // fence
 const fx1=-10.4,fx2=14.6,fz1=-4,fz2=40;
 function fenceRun(x1,z1,x2,z2,gaps){const len=Math.hypot(x2-x1,z2-z1);const ax=x2!==x1;
@@ -295,7 +289,7 @@ function label(text,x,z){const c=document.createElement("canvas");c.width=512;c.
   k.beginPath();k.roundRect?k.roundRect((512-w)/2,24,w,80,40):k.rect((512-w)/2,24,w,80);k.fill();
   k.fillStyle="#fff";k.font="600 44px Commissioner, system-ui, sans-serif";k.textAlign="center";k.textBaseline="middle";k.fillText(text,256,66);
   const s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false}));s.scale.set(2.6,0.65,1);s.position.set(x,3.6,z);s.renderOrder=10;groups.labels.add(s)}
-label("Σαλόνι",2.5,5.6);label("Κουζίνα",2.6,1.4);label("Υπνοδ. 1 · 12,5",6.65,6.3);label("Υπνοδ. 2 · 12,5",9.95,6.3);
+label("Σαλόνι",2.5,5.6);label("Κουζίνα",2.6,1.4);label("Υπνοδ. 1 · 14,4",6.9,6.3);label("Υπνοδ. 2 · 14,4",10.7,6.3);
 label("Μπάνιο",7.7,1.2);label("Πλυσταριό 8,6",10.9,1.2);label("Είσοδος",5.7,1.0);
 groups.labels.visible=false;
 
@@ -307,8 +301,8 @@ const V={
   living:{t:"Σαλόνι",d:"Τζάκι με χωνευτή τηλεόραση, καναπές κυπαρισσί στον τοίχο με ράφια από πάνω, τζαμαρία προς την πέργκολα.",p:[4.6,1.6,3.4],c:[0.8,1.2,6.6],roof:0},
   sofa:{t:"Καναπές & ράφια",d:"Καναπές κυπαρισσί κολλητά στον τοίχο, ράφια στο χρώμα της τραπεζαρίας, πλακάκι γκρι 60×120.",p:[1.2,1.6,4.0],c:[4.8,1.2,5.6],roof:0},
   kitchen:{t:"Κουζίνα με τραπέζι",d:"Γκρι ντουλάπια, πάγκος και τραπέζι στο ίδιο ξύλο, ενιαία με το σαλόνι.",p:[3.6,1.6,4.4],c:[2.2,1.0,0.6],roof:0},
-  bed:{t:"Υπνοδωμάτιο 1",d:"12,5 τ.μ. Κρεβάτι κάτω από το παράθυρο, walk-in από την πόρτα ως τον τοίχο με συρόμενο καθρέφτη.",p:[8.05,1.65,4.3],c:[5.6,0.9,6.4],roof:0},
-  kids:{t:"Υπνοδωμάτιο 2",d:"12,5 τ.μ. Ίδια διάταξη, καθρέφτισμα του πρώτου.",p:[8.55,1.65,4.3],c:[11.2,0.9,6.4],roof:0},
+  bed:{t:"Υπνοδωμάτιο 1",d:"14,4 τ.μ. Κρεβάτι κάτω από το παράθυρο, walk-in 2,0 μ. από την πόρτα ως τον τοίχο με συρόμενο καθρέφτη.",p:[8.55,1.65,4.3],c:[5.8,0.9,6.4],roof:0},
+  kids:{t:"Υπνοδωμάτιο 2",d:"14,4 τ.μ. Ίδια διάταξη με το πρώτο.",p:[9.05,1.65,4.3],c:[12.0,0.9,6.4],roof:0},
   laundry:{t:"Πλυσταριό · άπλωμα · εργαλεία",d:"Στήλη πλυντηρίου/στεγνωτηρίου, απλώστρα οροφής, ράφια, πόρτα αυλής.",p:[9.5,1.65,1.7],c:[12.4,1.1,0.6],roof:0}
 };
 let anim=null;
