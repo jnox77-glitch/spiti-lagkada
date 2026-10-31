@@ -141,6 +141,15 @@ h3{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--mu
 .svgbox svg{display:block;width:100%;height:auto;min-width:320px}
 svg text{font-family:var(--f-body);fill:var(--fg)}
 .assume{margin:0;padding-left:18px;font-size:.86rem;color:var(--muted);display:flex;flex-direction:column;gap:3px}
+.studies{display:flex;flex-direction:column;gap:8px}
+.study{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center}
+.study .sn{font-family:var(--f-display);font-weight:700;color:var(--accent);font-size:1.1rem;width:1.6em;text-align:center}
+.study .st{display:flex;flex-direction:column;min-width:0}
+.study .st small{color:var(--muted);font-size:.8rem}
+.study .sa{display:flex;gap:6px}
+.study a.btn{text-decoration:none;display:inline-block}
+@media(max-width:520px){.study{grid-template-columns:auto minmax(0,1fr)}.study .sa{grid-column:1/-1}}
+a.btn{text-decoration:none;display:inline-block}
 .empty{color:var(--muted);font-size:.9rem;padding:14px}
 @media (prefers-reduced-motion: no-preference){.row,.chip,.btn{transition:background .15s}}
 </style>
@@ -156,6 +165,7 @@ svg text{font-family:var(--f-body);fill:var(--fg)}
       <button role="tab" data-tab="overview" aria-selected="true">Επισκόπηση</button>
       <button role="tab" data-tab="work" aria-selected="false">Εργασίες & κόστος</button>
       <button role="tab" data-tab="plans" aria-selected="false">Σχέδια</button>
+      <button role="tab" data-tab="docs" aria-selected="false">Μελέτες</button>
       <button role="tab" data-tab="lists" aria-selected="false">Επιθυμίες & ερωτήσεις</button>
     </nav>
   </div>
@@ -402,6 +412,28 @@ svg text{font-family:var(--f-body);fill:var(--fg)}
     </div>
   </section>
 
+  <!-- STUDIES -->
+  <section data-panel="docs" hidden style="flex-direction:column;gap:14px">
+    <div class="card">
+      <h2>Μελέτες για προσφορές</h2>
+      <p class="note">Μία μελέτη ανά συνεργείο, με ποσότητες και κενές στήλες για τιμές. Στείλτε την κάθε μία στο αντίστοιχο συνεργείο μαζί με την κάτοψη.</p>
+      <div><a class="btn" href="/meletes/oles-oi-meletes.zip" download>Λήψη όλων (zip)</a></div>
+    </div>
+    <div class="studies">
+      <div class="study"><span class="sn num">1</span><div class="st"><b>Θεμελίωση & σκυροδέματα</b><small>Συνεργείο σκυροδεμάτων · 3 σελ.</small></div><div class="sa"><a class="btn" href="/meletes/meleti-01.pdf" target="_blank" rel="noopener">Προβολή</a><a class="btn primary" href="/meletes/meleti-01.pdf" download="Spiti-Lagkada-Meleti-01.pdf">Λήψη</a></div></div>
+      <div class="study"><span class="sn num">2</span><div class="st"><b>Ξηρά δόμηση, ψευδοροφές & walk-in</b><small>Γυψοσανιδάς · 4 σελ.</small></div><div class="sa"><a class="btn" href="/meletes/meleti-02.pdf" target="_blank" rel="noopener">Προβολή</a><a class="btn primary" href="/meletes/meleti-02.pdf" download="Spiti-Lagkada-Meleti-02.pdf">Λήψη</a></div></div>
+      <div class="study"><span class="sn num">3</span><div class="st"><b>Εσωτερικά κουφώματα & καθρεπτοπόρτες</b><small>Πόρτες, καθρέφτες · 3 σελ.</small></div><div class="sa"><a class="btn" href="/meletes/meleti-03.pdf" target="_blank" rel="noopener">Προβολή</a><a class="btn primary" href="/meletes/meleti-03.pdf" download="Spiti-Lagkada-Meleti-03.pdf">Λήψη</a></div></div>
+      <div class="study"><span class="sn num">4</span><div class="st"><b>Εξωτερικά κουφώματα</b><small>Αλουμίνια · 3 σελ.</small></div><div class="sa"><a class="btn" href="/meletes/meleti-04.pdf" target="_blank" rel="noopener">Προβολή</a><a class="btn primary" href="/meletes/meleti-04.pdf" download="Spiti-Lagkada-Meleti-04.pdf">Λήψη</a></div></div>
+      <div class="study"><span class="sn num">5</span><div class="st"><b>Σιδηροκατασκευές</b><small>Σιδεράς: πέργκολα, πάρκινγκ, στέγαστρο · 2 σελ.</small></div><div class="sa"><a class="btn" href="/meletes/meleti-05.pdf" target="_blank" rel="noopener">Προβολή</a><a class="btn primary" href="/meletes/meleti-05.pdf" download="Spiti-Lagkada-Meleti-05.pdf">Λήψη</a></div></div>
+      <div class="study"><span class="sn num">6</span><div class="st"><b>Κουζίνα</b><small>Επιπλοποιός · 3 σελ.</small></div><div class="sa"><a class="btn" href="/meletes/meleti-06.pdf" target="_blank" rel="noopener">Προβολή</a><a class="btn primary" href="/meletes/meleti-06.pdf" download="Spiti-Lagkada-Meleti-06.pdf">Λήψη</a></div></div>
+      <div class="study"><span class="sn num">7</span><div class="st"><b>Ανοιχτό τζάκι</b><small>Τζάκια · 2 σελ.</small></div><div class="sa"><a class="btn" href="/meletes/meleti-07.pdf" target="_blank" rel="noopener">Προβολή</a><a class="btn primary" href="/meletes/meleti-07.pdf" download="Spiti-Lagkada-Meleti-07.pdf">Λήψη</a></div></div>
+      <div class="study"><span class="sn num">8</span><div class="st"><b>Υδραυλικά, θέρμανση & ψύξη</b><small>Υδραυλικός · 3 σελ.</small></div><div class="sa"><a class="btn" href="/meletes/meleti-08.pdf" target="_blank" rel="noopener">Προβολή</a><a class="btn primary" href="/meletes/meleti-08.pdf" download="Spiti-Lagkada-Meleti-08.pdf">Λήψη</a></div></div>
+      <div class="study"><span class="sn num">9</span><div class="st"><b>Ηλεκτρολογικά, πυρανίχνευση & συναγερμός</b><small>Ηλεκτρολόγος · 5 σελ.</small></div><div class="sa"><a class="btn" href="/meletes/meleti-09.pdf" target="_blank" rel="noopener">Προβολή</a><a class="btn primary" href="/meletes/meleti-09.pdf" download="Spiti-Lagkada-Meleti-09.pdf">Λήψη</a></div></div>
+      <div class="study"><span class="sn num">10</span><div class="st"><b>Πλακίδια μέσα & πέργκολα</b><small>Πλακάς · 3 σελ.</small></div><div class="sa"><a class="btn" href="/meletes/meleti-10.pdf" target="_blank" rel="noopener">Προβολή</a><a class="btn primary" href="/meletes/meleti-10.pdf" download="Spiti-Lagkada-Meleti-10.pdf">Λήψη</a></div></div>
+      <div class="study"><span class="sn num">11</span><div class="st"><b>Στεγάνωση & μόνωση δώματος</b><small>Μονωτής · 3 σελ.</small></div><div class="sa"><a class="btn" href="/meletes/meleti-11.pdf" target="_blank" rel="noopener">Προβολή</a><a class="btn primary" href="/meletes/meleti-11.pdf" download="Spiti-Lagkada-Meleti-11.pdf">Λήψη</a></div></div>
+    </div>
+  </section>
+
   <!-- LISTS -->
   <section data-panel="lists" hidden style="flex-direction:column;gap:16px">
     <div class="card">
@@ -490,8 +522,8 @@ function go(t){
   if(location.hash.slice(1)!==t) history.replaceState(null,"","#"+t);
 }
 const start=location.hash.slice(1);
-if(["overview","work","plans","lists"].includes(start)) go(start);
-window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(["overview","work","plans","lists"].includes(h))go(h)});
+if(["overview","work","plans","docs","lists"].includes(start)) go(start);
+window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(["overview","work","plans","docs","lists"].includes(h))go(h)});
 
 /* render */
 function render(){renderOverview();renderWork();renderLists()}
