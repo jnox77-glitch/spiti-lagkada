@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Σπίτι Λαγκαδά</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700&family=Literata:opsz,wght@7..72,500;7..72,700&display=swap">
+<style>
+/* Layout: one column, sticky tab bar; work board grouped by build phase; drawings as scaled SVG */
+:root{
+  --bg:#ECEFEC; --surface:#FFFFFF; --sunk:#E2E7E3; --fg:#1C221F; --muted:#5B6660; --line:#CED6D0;
+  --accent:#3F6B3A; --accent-ink:#FFFFFF; --accent-soft:#DCE8D6;
+  --todo:#7A857F; --doing:#A86B12; --doing-soft:#F4E6CC; --done:#2E7A4E; --done-soft:#D6EDDF; --over:#B4432F;
+  --wall:#1C221F; --room:#F7F9F7; --room2:#EEF2EE; --plot:#E3EBDD; --road:#C9CFCB; --water:#BCD7E6; --tree:#7FA66E;
+  --f-display:"Literata",Georgia,"Times New Roman",serif;
+  --f-body:"Commissioner",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141816; --surface:#1C211E; --sunk:#232A26; --fg:#E4E9E5; --muted:#99A49E; --line:#323B36;
+  --accent:#93BC7F; --accent-ink:#13200F; --accent-soft:#2A3A25;
+  --todo:#8E9993; --doing:#E0A447; --doing-soft:#3A2E1A; --done:#6CC490; --done-soft:#1F3428; --over:#E2795F;
+  --wall:#DCE3DE; --room:#1F2522; --room2:#252C28; --plot:#1D2A1C; --road:#39413C; --water:#24465A; --tree:#4E7A42;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141816; --surface:#1C211E; --sunk:#232A26; --fg:#E4E9E5; --muted:#99A49E; --line:#323B36;
+  --accent:#93BC7F; --accent-ink:#13200F; --accent-soft:#2A3A25;
+  --todo:#8E9993; --doing:#E0A447; --doing-soft:#3A2E1A; --done:#6CC490; --done-soft:#1F3428; --over:#E2795F;
+  --wall:#DCE3DE; --room:#1F2522; --room2:#252C28; --plot:#1D2A1C; --road:#39413C; --water:#24465A; --tree:#4E7A42;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.top .wrap{padding-block:12px 0}
+.brand{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{font-family:var(--f-display);font-weight:700;font-size:1.45rem;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:.82rem}
+nav.tabs{display:flex;gap:4px;margin-top:10px;overflow-x:auto;scrollbar-width:none}
+nav.tabs button{font:inherit;font-weight:600;font-size:.9rem;background:none;border:0;color:var(--muted);padding:9px 12px;border-bottom:2.5px solid transparent;cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--fg);border-color:var(--accent)}
+nav.tabs button:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main .wrap{padding-block:18px 60px;display:flex;flex-direction:column;gap:22px}
+h2{font-family:var(--f-display);font-size:1.15rem;margin:0;text-wrap:balance}
+h3{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0;font-weight:600}
+.num{font-variant-numeric:tabular-nums}
+.note{color:var(--muted);font-size:.85rem;margin:0}
+.banner{background:var(--doing-soft);color:var(--fg);border-radius:10px;padding:10px 14px;font-size:.88rem}
+
+/* overview */
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media(min-width:640px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .v{font-size:1.25rem;font-weight:700}
+.kpi .l{font-size:.78rem;color:var(--muted)}
+.kpi.warn .v{color:var(--over)}
+.budget{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:12px}
+.meter{position:relative;height:14px;border-radius:7px;background:var(--sunk);overflow:hidden}
+.meter span{position:absolute;inset:0 auto 0 0;background:var(--accent);border-radius:7px}
+.meter span.later{background:var(--accent-soft)}
+.meter i{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--fg)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;color:var(--muted)}
+.legend b{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.phbars{display:flex;flex-direction:column;gap:8px}
+.phbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;font-size:.86rem}
+.phbar .bar{grid-column:1/-1;height:6px;background:var(--sunk);border-radius:3px;overflow:hidden}
+.phbar .bar span{display:block;height:100%;background:var(--accent)}
+.next{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.next li{display:flex;gap:10px;align-items:baseline;font-size:.9rem}
+.next li small{color:var(--muted)}
+
+/* phases */
+.phase{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.phase>summary{list-style:none;cursor:pointer;padding:12px 14px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 12px;align-items:center}
+.phase>summary::-webkit-details-marker{display:none}
+.phase .no{font-family:var(--f-display);font-weight:700;color:var(--accent);font-size:1.05rem;width:1.6em}
+.phase .pt{font-weight:600}
+.phase .ps{font-size:.8rem;color:var(--muted);grid-column:2/-1}
+.phase .pv{text-align:right;font-weight:600}
+.rows{border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:2px 10px;padding:10px 14px;border-bottom:1px solid var(--line);align-items:center;cursor:pointer}
+.row:hover{background:var(--room2)}
+.row .t{font-size:.92rem;min-width:0}
+.row .m{grid-column:2/3;font-size:.76rem;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap}
+.row .a{text-align:right;font-size:.88rem;grid-row:1/3;grid-column:3}
+.row .a small{display:block;color:var(--muted);font-size:.74rem}
+.pill{grid-row:1/3;font:inherit;font-size:.7rem;font-weight:700;letter-spacing:.03em;border:0;border-radius:999px;padding:4px 8px;cursor:pointer;min-width:70px}
+.pill.todo{background:var(--sunk);color:var(--todo)}
+.pill.doing{background:var(--doing-soft);color:var(--doing)}
+.pill.done{background:var(--done-soft);color:var(--done)}
+.tag{background:var(--sunk);border-radius:4px;padding:0 5px}
+.tag.later{background:var(--accent-soft);color:var(--fg)}
+.addrow{padding:10px 14px}
+.btn{font:inherit;font-weight:600;font-size:.88rem;border-radius:9px;padding:8px 14px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.ghost{border-color:transparent;background:none;color:var(--accent);padding-inline:0}
+.btn.danger{color:var(--over)}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font:inherit;font-size:.82rem;border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:5px 11px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(10,14,12,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:16px 16px 0 0;padding:18px max(16px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:12px}
+@media(min-width:640px){.scrim{align-items:center}.sheet{border-radius:16px}}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:.78rem;color:var(--muted);font-weight:600}
+.field input,.field select,.field textarea{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%}
+.field textarea{min-height:70px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.check{display:flex;gap:8px;align-items:center;font-size:.9rem}
+.actions{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;margin-top:4px}
+
+/* lists */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.wishes{display:flex;flex-direction:column;gap:14px}
+.wgroup ul{margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:3px}
+.wgroup li{font-size:.92rem}
+.wgroup li button{font:inherit;font-size:.75rem;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}
+.addline{display:flex;gap:8px;flex-wrap:wrap}
+.addline select{flex:0 0 auto}
+.addline input{flex:1 1 180px;min-width:0}
+.addline input,.addline select{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.q{display:flex;flex-direction:column;gap:6px;padding-top:10px;border-top:1px solid var(--line)}
+.q:first-of-type{border-top:0;padding-top:0}
+.q p{margin:0;font-weight:600;font-size:.92rem}
+.q textarea{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-height:42px;resize:vertical}
+.q.answered p::before{content:"✓ ";color:var(--done)}
+
+/* drawings */
+.draw{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.svgbox{overflow-x:auto}
+.svgbox svg{display:block;width:100%;height:auto;min-width:320px}
+svg text{font-family:var(--f-body);fill:var(--fg)}
+.assume{margin:0;padding-left:18px;font-size:.86rem;color:var(--muted);display:flex;flex-direction:column;gap:3px}
+.empty{color:var(--muted);font-size:.9rem;padding:14px}
+@media (prefers-reduced-motion: no-preference){.row,.chip,.btn{transition:background .15s}}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <h1>Σπίτι Λαγκαδά</h1>
+      <span class="sub"><a href="/3d.html" style="color:var(--accent);font-weight:600;text-decoration:none">Δες το 3D →</a></span>
+      <span class="sub" id="subline">Οικόπεδο 1.100 τ.μ. · Σύμμικτη κατασκευή ~88 τ.μ. · Ισόγειο</span>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="overview" aria-selected="true">Επισκόπηση</button>
+      <button role="tab" data-tab="work" aria-selected="false">Εργασίες & κόστος</button>
+      <button role="tab" data-tab="plans" aria-selected="false">Σχέδια</button>
+      <button role="tab" data-tab="lists" aria-selected="false">Επιθυμίες & ερωτήσεις</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+  <div class="banner" id="status" hidden></div>
+
+  <!-- OVERVIEW -->
+  <section data-panel="overview" style="display:flex;flex-direction:column;gap:22px">
+    <div class="kpis">
+      <div class="kpi"><span class="l">Εκτίμηση συνόλου</span><span class="v num" id="k-total">—</span></div>
+      <div class="kpi"><span class="l">Στόχος προϋπολογισμού</span><span class="v num" id="k-budget">—</span></div>
+      <div class="kpi" id="k-diff-box"><span class="l">Διαφορά</span><span class="v num" id="k-diff">—</span></div>
+      <div class="kpi"><span class="l">Πληρωμένα</span><span class="v num" id="k-paid">—</span></div>
+    </div>
+    <div class="budget">
+      <h3>Κόστος απέναντι στον στόχο</h3>
+      <div class="meter" id="meter"></div>
+      <div class="legend">
+        <span><b style="background:var(--accent)"></b>Απαραίτητα για να μπείτε</span>
+        <span><b style="background:var(--accent-soft)"></b>Μπορούν να περιμένουν</span>
+        <span><b style="background:var(--fg);width:3px"></b>Στόχος</span>
+      </div>
+      <p class="note" id="budget-note"></p>
+    </div>
+    <div class="card">
+      <h3>Ανά φάση</h3>
+      <div class="phbars" id="phbars"></div>
+    </div>
+    <div class="card">
+      <h3>Επόμενα βήματα</h3>
+      <ul class="next" id="next"></ul>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section data-panel="work" hidden style="flex-direction:column;gap:14px">
+    <div class="filters" id="filters">
+      <button class="chip" data-f="all" aria-pressed="true">Όλα</button>
+      <button class="chip" data-f="open" aria-pressed="false">Ανοιχτά</button>
+      <button class="chip" data-f="done" aria-pressed="false">Ολοκληρωμένα</button>
+      <button class="chip" data-f="later" aria-pressed="false">Μπορούν να περιμένουν</button>
+    </div>
+    <p class="note">Πάτα μια εργασία για να γράψεις προσφορά, πληρωμή ή σημείωση. Το χρωματιστό κουμπί αλλάζει κατάσταση.</p>
+    <div id="phases" style="display:flex;flex-direction:column;gap:10px"></div>
+  </section>
+
+  <!-- PLANS -->
+  <section data-panel="plans" hidden style="flex-direction:column;gap:16px">
+    <div class="draw">
+      <h2>Κάτοψη · πρόταση v1</h2>
+      <p class="note">11,6 × 7,4 μ. + πλυσταριό που προεξέχει 1,0 × 2,4 μ. = 88,2 τ.μ. Σύμμικτη κατασκευή: σκελετός από μπετόν, τοίχοι ξηράς δόμησης. Ζώνη ημέρας δυτικά, ζώνη ύπνου ανατολικά, επίπεδη στέγη με φωτοβολταϊκά.</p>
+      <div class="svgbox">
+      <svg viewBox="0 0 1400 1130" role="img" aria-label="Κάτοψη σπιτιού 88 τ.μ.">
+        <defs>
+          <pattern id="hatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="var(--line)" stroke-width="4"/></pattern>
+        </defs>
+        <g transform="translate(70,70)">
+          <!-- pergola -->
+          <rect x="0" y="740" width="500" height="250" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="10 8"/>
+          <text x="250" y="870" text-anchor="middle" font-size="26" fill="var(--muted)">Πέργκολα 5,0 × 2,5</text>
+          <text x="255" y="728" text-anchor="middle" font-size="19" fill="var(--accent)">τζαμαρία 4,3 μ.</text>
+          <!-- rooms -->
+          <rect x="0" y="0" width="500" height="300" fill="var(--room2)"/>
+          <rect x="0" y="300" width="500" height="440" fill="var(--room)"/>
+          <rect x="0" y="0" width="500" height="300" fill="var(--room)"/>
+          <rect x="500" y="0" width="140" height="240" fill="var(--room2)"/>
+          <rect x="640" y="0" width="260" height="240" fill="var(--water)" opacity=".55"/>
+          <rect x="900" y="0" width="360" height="240" fill="var(--room2)"/>
+          <rect x="500" y="240" width="660" height="120" fill="var(--room)"/>
+          <rect x="500" y="360" width="330" height="380" fill="var(--room2)"/>
+          <rect x="830" y="360" width="330" height="380" fill="var(--room2)"/>
+          <rect x="500" y="360" width="180" height="120" fill="url(#hatch)"/>
+          <rect x="960" y="360" width="200" height="120" fill="url(#hatch)"/>
+                    <!-- walls -->
+          <g stroke="var(--wall)" stroke-width="5" fill="none">
+            <polygon points="0,0 1260,0 1260,240 1160,240 1160,740 0,740" stroke-width="9"/>
+            <line x1="500" y1="0" x2="500" y2="240"/>
+            <line x1="640" y1="0" x2="640" y2="240"/>
+            <line x1="900" y1="0" x2="900" y2="240"/>
+            <line x1="500" y1="240" x2="1160" y2="240"/>
+            <line x1="500" y1="360" x2="1160" y2="360"/>
+            <line x1="500" y1="360" x2="500" y2="740"/>
+            <line x1="830" y1="360" x2="830" y2="740"/>
+                        <line x1="680" y1="360" x2="680" y2="480" stroke-width="2.5"/>
+            <line x1="960" y1="360" x2="960" y2="480" stroke-width="2.5"/>
+          </g>
+          <!-- openings (erase wall, mark in accent) -->
+          <g stroke-width="11">
+            <line x1="530" y1="0" x2="610" y2="0" stroke="var(--surface)"/>
+            <line x1="680" y1="240" x2="760" y2="240" stroke="var(--room)"/>
+            <line x1="900" y1="80" x2="900" y2="160" stroke="var(--room2)"/>
+            <line x1="680" y1="360" x2="760" y2="360" stroke="var(--room)"/>
+            <line x1="880" y1="360" x2="960" y2="360" stroke="var(--room)"/>
+            <line x1="500" y1="250" x2="500" y2="350" stroke="var(--room)"/>
+            <line x1="40" y1="740" x2="470" y2="740" stroke="var(--surface)"/>
+            <line x1="1260" y1="70" x2="1260" y2="160" stroke="var(--surface)"/>
+          </g>
+          <g stroke="var(--accent)" stroke-width="5" stroke-linecap="round">
+            <line x1="530" y1="0" x2="610" y2="0"/>
+            <line x1="680" y1="240" x2="760" y2="240"/>
+            <line x1="900" y1="80" x2="900" y2="160"/>
+            <line x1="680" y1="360" x2="760" y2="360"/>
+            <line x1="505" y1="480" x2="678" y2="480" stroke-dasharray="10 6" stroke-width="4"/>
+            <line x1="962" y1="480" x2="1155" y2="480" stroke-dasharray="10 6" stroke-width="4"/>
+            <line x1="880" y1="360" x2="960" y2="360"/>
+            <line x1="40" y1="740" x2="470" y2="740" stroke-width="7"/>
+            <line x1="1260" y1="70" x2="1260" y2="160"/>
+          </g>
+          <!-- bedroom furniture -->
+          <g fill="var(--surface)" stroke="var(--muted)" stroke-width="2">
+            <rect x="585" y="540" width="160" height="200"/><rect x="597" y="704" width="62" height="26"/><rect x="671" y="704" width="62" height="26"/>
+            <rect x="540" y="698" width="40" height="40"/><rect x="750" y="698" width="40" height="40"/>
+            <rect x="915" y="540" width="160" height="200"/><rect x="927" y="704" width="62" height="26"/><rect x="1001" y="704" width="62" height="26"/>
+            <rect x="870" y="698" width="40" height="40"/><rect x="1080" y="698" width="40" height="40"/>
+          </g>
+                    <!-- fireplace -->
+          <rect x="4" y="470" width="44" height="120" fill="var(--doing)" opacity=".85"/>
+          <text x="60" y="538" font-size="22" fill="var(--muted)">τζάκι</text>
+          <!-- labels -->
+          <g font-size="28" font-weight="600" text-anchor="middle">
+            <text x="250" y="140">Κουζίνα + τραπέζι</text>
+            <text x="250" y="510">Σαλόνι</text>
+            <text x="570" y="115" font-size="22">Είσοδος</text>
+            <text x="770" y="115" font-size="24">Μπάνιο</text>
+            <text x="1080" y="95" font-size="22">Πλυσταριό · άπλωμα</text>
+            <text x="1080" y="122" font-size="22">εργαλεία</text>
+            <text x="830" y="307" font-size="22" font-weight="500" fill="var(--muted)">Διάδρομος</text>
+            <text x="665" y="612" font-size="24">Υπνοδ. 1</text>
+            <text x="995" y="612" font-size="24">Υπνοδ. 2</text>
+          </g>
+          <g font-size="22" text-anchor="middle" fill="var(--muted)" class="num">
+            <text x="250" y="172" fill="var(--muted)">ενιαίο με σαλόνι</text>
+            <text x="250" y="542" fill="var(--muted)">37 τ.μ. μαζί</text>
+            <text x="570" y="145" font-size="19" fill="var(--muted)">3,4</text>
+            <text x="770" y="145" fill="var(--muted)">6,2 · ντουζιέρα</text>
+            <text x="1080" y="155" fill="var(--muted)">8,6 τ.μ. · αφυγραντήρας</text>
+            <text x="1275" y="125" font-size="18" fill="var(--accent)" text-anchor="start">πόρτα αυλής</text>
+            <text x="665" y="640" fill="var(--muted)">12,5 τ.μ.</text>
+            <text x="995" y="640" fill="var(--muted)">12,5 τ.μ.</text>
+            <text x="590" y="415" font-size="19" fill="var(--muted)">walk-in</text>
+            <text x="590" y="440" font-size="15" fill="var(--muted)">1,8 × 1,2</text>
+            <text x="1060" y="415" font-size="19" fill="var(--muted)">walk-in</text>
+            <text x="1060" y="440" font-size="15" fill="var(--muted)">2,0 × 1,2</text>
+            <text x="590" y="505" font-size="14" fill="var(--accent)">συρόμενος καθρέφτης</text>
+            <text x="1060" y="505" font-size="14" fill="var(--accent)">συρόμενος καθρέφτης</text>
+          </g>
+          <!-- entrance arrow -->
+          <g fill="var(--accent)"><path d="M570 -50 l-14 0 l14 32 l14 -32 z"/></g>
+          <text x="600" y="-28" font-size="20" fill="var(--accent)">κύρια είσοδος (δρόμος)</text>
+          <!-- dims -->
+          <g stroke="var(--muted)" stroke-width="1.5">
+            <line x1="0" y1="1020" x2="1160" y2="1020"/><line x1="0" y1="1010" x2="0" y2="1030"/><line x1="1160" y1="1010" x2="1160" y2="1030"/>
+            <line x1="1190" y1="260" x2="1190" y2="740"/><line x1="1180" y1="740" x2="1200" y2="740"/>
+          </g>
+          <text x="580" y="1050" text-anchor="middle" font-size="22" fill="var(--muted)">11,6 μ.</text>
+          <text x="1220" y="420" font-size="22" fill="var(--muted)" transform="rotate(90 1220 420)">7,4 μ.</text>
+          <text x="820" y="880" font-size="22" fill="var(--muted)">Νότος → κήπος (να επιβεβαιωθεί)</text>
+        </g>
+      </svg>
+      </div>
+      <ul class="assume">
+        <li>Υπνοδωμάτια 3,3 × 3,8 μ. = 12,5 τ.μ. το καθένα. Το walk-in ξεκινά ακριβώς από την πόρτα και φτάνει ως τον τοίχο (1,8 × 1,2 και 2,0 × 1,2 μ.), με κρεμάστρα στον τοίχο του διαδρόμου και συρόμενους καθρέφτες μπροστά.</li>
+        <li>Τα κρεβάτια 1,60 × 2,00 έχουν το κεφάλι κάτω από το νότιο παράθυρο. Μένουν 60 εκ. ως τον καθρέφτη και ~85 εκ. σε κάθε πλευρά για κομοδίνα.</li>
+        <li>Το πλυσταριό μεγάλωσε σε 8,6 τ.μ.: πλυντήριο και στεγνωτήριο σε στήλη, ράφια απορρυπαντικών, ανεβοκατεβαίνουσα απλώστρα οροφής και τοίχος εργαλείων. Έχει πόρτα από το μπάνιο και δική του πόρτα προς την αυλή. Αφυγραντήρας για το στέγνωμα των ρούχων.</li>
+        <li>Το σαλόνι έχει τζαμαρία σχεδόν σε όλο τον νότιο τοίχο (4,3 μ.), συρόμενη προς την πέργκολα.</li>
+        <li>Κουζίνα και σαλόνι γίνονται ενιαίος χώρος 37 τ.μ., χωρίς τοίχο ανάμεσα.</li>
+        <li>Ψευδοροφή με κρυφό φωτισμό σε όλους τους χώρους. Εσωτερικά χωρίσματα με διπλή γυψοσανίδα και ηχομόνωση.</li>
+        <li>Η καμινάδα του ανοιχτού τζακιού περνάει από την πλάκα οροφής: να προβλεφθεί στα στατικά πριν τη ρίψη.</li>
+      </ul>
+    </div>
+
+    <div class="draw">
+      <h2>Διάταξη οικοπέδου · πρόταση v1</h2>
+      <p class="note">Σχηματικά, με υπόθεση 25 × 44 μ. Θα διορθωθεί με το τοπογραφικό.</p>
+      <div class="svgbox">
+      <svg viewBox="0 0 330 520" role="img" aria-label="Διάταξη οικοπέδου">
+        <g transform="translate(40,30)">
+          <rect x="-40" y="-30" width="330" height="26" fill="var(--road)"/>
+          <text x="125" y="-12" text-anchor="middle" font-size="10" fill="var(--muted)">Δρόμος</text>
+          <rect x="0" y="0" width="250" height="440" fill="var(--plot)" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 3"/>
+          <!-- driveway & gate -->
+          <rect x="20" y="0" width="40" height="40" fill="var(--road)" opacity=".7"/>
+          <line x1="18" y1="0" x2="62" y2="0" stroke="var(--accent)" stroke-width="4"/>
+          <!-- carport -->
+          <rect x="10" y="40" width="84" height="55" fill="var(--sunk)" stroke="var(--wall)" stroke-width="1.2"/>
+          <g stroke="var(--muted)" stroke-width=".8"><line x1="38" y1="40" x2="38" y2="95"/><line x1="66" y1="40" x2="66" y2="95"/></g>
+          <text x="52" y="66" text-anchor="middle" font-size="8.5" font-weight="600">Σκεπαστό</text>
+          <text x="52" y="77" text-anchor="middle" font-size="8.5" font-weight="600">πάρκινγκ ×3</text>
+          <!-- house -->
+          <rect x="104" y="40" width="116" height="74" fill="var(--surface)" stroke="var(--wall)" stroke-width="2"/>
+          <rect x="220" y="40" width="10" height="24" fill="var(--surface)" stroke="var(--wall)" stroke-width="1.2"/>
+          <text x="165" y="76" text-anchor="middle" font-size="10" font-weight="700">Σπίτι</text>
+          <text x="165" y="88" text-anchor="middle" font-size="8" fill="var(--muted)">88 τ.μ. · Φ/Β στην ταράτσα</text>
+          <line x1="133" y1="40" x2="141" y2="40" stroke="var(--accent)" stroke-width="3"/>
+          <rect x="190" y="30" width="12" height="8" fill="var(--muted)"/>
+          <text x="205" y="27" font-size="7" fill="var(--muted)">αντλία θ.</text>
+          <!-- pergola -->
+          <rect x="110" y="114" width="50" height="25" fill="none" stroke="var(--muted)" stroke-dasharray="3 2"/>
+          <text x="135" y="130" text-anchor="middle" font-size="7.5" fill="var(--muted)">πέργκολα</text>
+          <!-- tank -->
+          <rect x="175" y="122" width="34" height="22" rx="4" fill="var(--water)" stroke="var(--muted)" stroke-dasharray="3 2"/>
+          <text x="192" y="136" text-anchor="middle" font-size="7">δεξαμενή</text>
+          <text x="192" y="154" text-anchor="middle" font-size="6.5" fill="var(--muted)">όμβρια ~10 m³</text>
+          <!-- path -->
+          <path d="M140 139 C140 170 90 175 75 195" fill="none" stroke="var(--road)" stroke-width="4"/>
+          <!-- kiosk & mulberries -->
+          <circle cx="35" cy="170" r="26" fill="var(--tree)" opacity=".75"/>
+          <circle cx="95" cy="170" r="26" fill="var(--tree)" opacity=".75"/>
+          <rect x="40" y="185" width="50" height="45" fill="var(--surface)" stroke="var(--wall)" stroke-width="1.2"/>
+          <text x="65" y="205" text-anchor="middle" font-size="8.5" font-weight="600">Κιόσκι</text>
+          <text x="65" y="217" text-anchor="middle" font-size="8">+ BBQ</text>
+          <text x="65" y="140" text-anchor="middle" font-size="7" fill="var(--muted)">πλατανομουριές</text>
+          <!-- lawn -->
+          <text x="125" y="265" text-anchor="middle" font-size="9" fill="var(--muted)">γκαζόν / παιχνίδι</text>
+          <!-- veg garden -->
+          <g fill="var(--surface)" stroke="var(--accent)" stroke-width="1">
+            <rect x="150" y="190" width="80" height="14"/><rect x="150" y="210" width="80" height="14"/><rect x="150" y="230" width="80" height="14"/><rect x="150" y="250" width="80" height="14"/>
+          </g>
+          <text x="190" y="280" text-anchor="middle" font-size="8.5" font-weight="600">Λαχανόκηπος</text>
+          <!-- orchard -->
+          <g fill="var(--tree)">
+            <circle cx="40" cy="330" r="11"/><circle cx="95" cy="330" r="11"/><circle cx="150" cy="330" r="11"/><circle cx="205" cy="330" r="11"/>
+            <circle cx="67" cy="375" r="11"/><circle cx="122" cy="375" r="11"/><circle cx="177" cy="375" r="11"/>
+          </g>
+          <text x="125" y="408" text-anchor="middle" font-size="9" font-weight="600">Οπωροφόρα</text>
+          <!-- shed -->
+          <rect x="10" y="412" width="40" height="22" fill="var(--sunk)" stroke="var(--wall)" stroke-width="1"/>
+          <text x="30" y="426" text-anchor="middle" font-size="6.5">κομπόστ/εργαλεία</text>
+          <!-- dims -->
+          <text x="125" y="456" text-anchor="middle" font-size="8" fill="var(--muted)">~25 μ.</text>
+          <text x="262" y="220" font-size="8" fill="var(--muted)" transform="rotate(90 262 220)">~44 μ.</text>
+        </g>
+      </svg>
+      </div>
+      <ul class="assume">
+        <li>Οι πλατανομουριές μπαίνουν ~6 μ. από σπίτι και δεξαμενή, νότια του κιοσκιού για ίσκιο το απόγευμα.</li>
+        <li>Η δεξαμενή κάθεται κοντά στο σπίτι, ώστε οι υδρορροές να έρχονται με μικρή διαδρομή, και κοντά στον λαχανόκηπο.</li>
+        <li>Η εξωτερική μονάδα της αντλίας θερμότητας πάει βόρεια, μακριά από υπνοδωμάτια και κιόσκι.</li>
+        <li>Οι αποστάσεις από τα όρια (Δ) θα κλειδώσουν από τον μηχανικό.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- LISTS -->
+  <section data-panel="lists" hidden style="flex-direction:column;gap:16px">
+    <div class="card">
+      <h2>Ανοιχτές ερωτήσεις</h2>
+      <p class="note">Απαντήστε εδώ όποιος από τους δύο ξέρει. Αποθηκεύεται μόλις βγείτε από το πεδίο.</p>
+      <div id="questions"></div>
+      <form class="addline" id="q-add">
+        <input id="q-new" placeholder="Νέα ερώτηση…" aria-label="Νέα ερώτηση">
+        <button class="btn" type="submit">Προσθήκη</button>
+      </form>
+    </div>
+    <div class="card">
+      <h2>Τι θέλουμε στο σπίτι</h2>
+      <div class="wishes" id="wishes"></div>
+      <form class="addline" id="w-add">
+        <select id="w-area" aria-label="Χώρος"></select>
+        <input id="w-new" placeholder="Νέα επιθυμία…" aria-label="Νέα επιθυμία">
+        <button class="btn" type="submit">Προσθήκη</button>
+      </form>
+    </div>
+  </section>
+</div>
+</main>
+
+<div class="scrim" id="scrim" hidden>
+  <form class="sheet" id="editor">
+    <h2 id="ed-title">Εργασία</h2>
+    <div class="field"><label for="f-title">Τίτλος</label><input id="f-title" required></div>
+    <div class="grid2">
+      <div class="field"><label for="f-phase">Φάση</label><select id="f-phase"></select></div>
+      <div class="field"><label for="f-cat">Είδος</label><select id="f-cat">
+        <option>Υλικά + εργασία</option><option>Υλικά</option><option>Συνεργείο</option><option>Υπηρεσία</option><option>Τέλη</option>
+      </select></div>
+    </div>
+    <div class="grid3">
+      <div class="field"><label for="f-est">Τιμή αγοράς €</label><input id="f-est" type="number" inputmode="decimal" min="0" step="1"></div>
+      <div class="field"><label for="f-quote">Δική μας τιμή €</label><input id="f-quote" type="number" inputmode="decimal" min="0" step="1"></div>
+      <div class="field"><label for="f-paid">Πληρώθηκαν €</label><input id="f-paid" type="number" inputmode="decimal" min="0" step="1"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label for="f-status">Κατάσταση</label><select id="f-status">
+        <option value="todo">Εκκρεμεί</option><option value="doing">Σε εξέλιξη</option><option value="done">Έγινε</option>
+      </select></div>
+      <div class="field"><label for="f-by">Πληρωμή από</label><select id="f-by">
+        <option value="">—</option><option>Δάνειο</option><option>Κοινό ταμείο</option>
+      </select></div>
+    </div>
+    <div class="field"><label for="f-who">Συνεργείο / προμηθευτής</label><input id="f-who" placeholder="όνομα, τηλέφωνο"></div>
+    <label class="check"><input type="checkbox" id="f-later"> Μπορεί να γίνει μετά τη μετακόμιση</label>
+    <div class="field"><label for="f-note">Σημειώσεις</label><textarea id="f-note"></textarea></div>
+    <div class="actions">
+      <span><button type="button" class="btn danger" id="ed-del">Διαγραφή</button> <button type="button" class="btn danger primary" id="ed-del2" hidden>Σίγουρα;</button></span>
+      <span style="display:flex;gap:8px"><button type="button" class="btn" id="ed-cancel">Άκυρο</button><button type="submit" class="btn primary">Αποθήκευση</button></span>
+    </div>
+  </form>
+</div>
+
+<script>
+const PHASES=[
+ {id:"p1",name:"Μελέτες & οικοδομική άδεια"},
+ {id:"p2",name:"Δάνειο"},
+ {id:"p3",name:"Οικόπεδο & παροχές"},
+ {id:"p4",name:"Θεμελίωση & σκελετός μπετόν"},
+ {id:"p5",name:"Κέλυφος: τοίχοι, μόνωση, κουφώματα"},
+ {id:"p6",name:"Ηλεκτρολογικά, υδραυλικά, θέρμανση, ενέργεια"},
+ {id:"p7",name:"Εσωτερικά τελειώματα"},
+ {id:"p8",name:"Αυλή & κήπος"},
+ {id:"p9",name:"Παράδοση & απρόβλεπτα"}
+];
+const AREAS=["Γενικά","Σαλόνι","Κουζίνα","Υπνοδωμάτια","Μπάνιο & πλυσταριό","Ενέργεια","Κήπος & αυλή","Πρόνοιες"];
+const ST={todo:"ΕΚΚΡΕΜΕΙ",doing:"ΣΕ ΕΞΕΛΙΞΗ",done:"ΕΓΙΝΕ"};
+const NEXT={todo:"doing",doing:"done",done:"todo"};
+const S={items:[],wishes:[],questions:[],meta:{budget:140000,loan:150000}};
+let db=null, filter="all", editing=null;
+const $=s=>document.querySelector(s);
+const eur=n=>new Intl.NumberFormat("el-GR",{style:"currency",currency:"EUR",maximumFractionDigits:0}).format(n||0);
+const cost=it=>(it.quote!=null&&it.quote!=="")?Number(it.quote):Number(it.est||0);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function showStatus(t){const b=$("#status");b.textContent=t;b.hidden=!t}
+
+/* tabs */
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.tab)));
+function go(t){
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t));
+  document.querySelectorAll("[data-panel]").forEach(p=>{const on=p.dataset.panel===t;p.hidden=!on;if(on)p.style.display="flex"});
+  if(location.hash.slice(1)!==t) history.replaceState(null,"","#"+t);
+}
+const start=location.hash.slice(1);
+if(["overview","work","plans","lists"].includes(start)) go(start);
+window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(["overview","work","plans","lists"].includes(h))go(h)});
+
+/* render */
+function render(){renderOverview();renderWork();renderLists()}
+function renderOverview(){
+  const items=S.items, total=items.reduce((a,i)=>a+cost(i),0);
+  const later=items.filter(i=>i.later).reduce((a,i)=>a+cost(i),0), core=total-later;
+  const paid=items.reduce((a,i)=>a+Number(i.paid||0),0), budget=Number(S.meta.budget||140000);
+  $("#k-total").textContent=items.length?eur(total):"—";
+  $("#k-budget").textContent=eur(budget);
+  const diff=budget-total;
+  $("#k-diff").textContent=items.length?(diff>=0?"+":"−")+eur(Math.abs(diff)):"—";
+  $("#k-diff-box").classList.toggle("warn",diff<0);
+  $("#k-paid").textContent=eur(paid);
+  const max=Math.max(total,budget)*1.04||1;
+  $("#meter").innerHTML=`<span class="later" style="width:${total/max*100}%"></span><span style="width:${core/max*100}%"></span><i style="left:${budget/max*100}%"></i>`;
+  $("#budget-note").textContent=items.length?
+    `Τα απαραίτητα για να μπείτε βγαίνουν ${eur(core)}. Όσα μπορούν να περιμένουν: ${eur(later)}. Τα ποσά είναι εκτιμήσεις αγοράς μέχρι να γράψετε δικές σας προσφορές.`:"";
+  $("#phbars").innerHTML=PHASES.map(p=>{
+    const its=items.filter(i=>i.phase===p.id); if(!its.length) return "";
+    const c=its.reduce((a,i)=>a+cost(i),0), done=its.filter(i=>i.status==="done").length;
+    return `<div class="phbar"><span>${esc(p.name)}</span><span class="num">${eur(c)} · ${done}/${its.length}</span><div class="bar"><span style="width:${done/its.length*100}%"></span></div></div>`}).join("")||`<p class="empty">Δεν υπάρχουν εργασίες ακόμα.</p>`;
+  const order=Object.fromEntries(PHASES.map((p,i)=>[p.id,i]));
+  const nx=items.filter(i=>i.status!=="done").sort((a,b)=>(order[a.phase]-order[b.phase])||(a.order-b.order)).slice(0,5);
+  $("#next").innerHTML=nx.map(i=>`<li><span class="pill ${i.status}" style="min-width:auto;grid-row:auto" aria-hidden="true">${ST[i.status]}</span><span>${esc(i.title)}<br><small>${esc(PHASES.find(p=>p.id===i.phase)?.name)}</small></span></li>`).join("")||`<li class="note">Όλα έγιναν.</li>`;
+}
+function renderWork(){
+  const host=$("#phases");
+  const pass=i=>filter==="all"||(filter==="open"&&i.status!=="done")||(filter==="done"&&i.status==="done")||(filter==="later"&&i.later);
+  const openState={};host.querySelectorAll("details").forEach(d=>openState[d.dataset.p]=d.open);
+  host.innerHTML=PHASES.map((p,ix)=>{
+    const all=S.items.filter(i=>i.phase===p.id).sort((a,b)=>(a.order||0)-(b.order||0));
+    const its=all.filter(pass);
+    const c=all.reduce((a,i)=>a+cost(i),0), paid=all.reduce((a,i)=>a+Number(i.paid||0),0), done=all.filter(i=>i.status==="done").length;
+    const open=openState[p.id]??(ix<2);
+    return `<details class="phase" data-p="${p.id}" ${open?"open":""}><summary><span class="no num">${ix+1}</span><span class="pt">${esc(p.name)}</span><span class="pv num">${eur(c)}</span><span class="ps num">${done}/${all.length} έγιναν · πληρωμένα ${eur(paid)}</span></summary>
+    <div class="rows">${its.map(i=>{
+      const hasQ=i.quote!=null&&i.quote!=="";
+      return `<div class="row" data-id="${i.id}" tabindex="0"><button class="pill ${i.status}" data-cycle="${i.id}" aria-label="Κατάσταση: ${ST[i.status]}">${ST[i.status]}</button><span class="t">${esc(i.title)}</span>
+      <span class="a num">${eur(cost(i))}<small>${hasQ?"δική μας · αγορά "+eur(i.est):"εκτίμηση"}</small></span>
+      <span class="m"><span class="tag">${esc(i.cat||"")}</span>${i.later?'<span class="tag later">μπορεί να περιμένει</span>':""}${Number(i.paid)?`<span>πληρώθηκαν ${eur(i.paid)}${i.paidBy?" · "+esc(i.paidBy):""}</span>`:""}${i.who?`<span>${esc(i.who)}</span>`:""}</span></div>`}).join("")||`<p class="empty">Τίποτα σε αυτό το φίλτρο.</p>`}
+    <div class="addrow"><button class="btn ghost" data-add="${p.id}">+ Νέα εργασία</button></div></div></details>`}).join("");
+}
+function renderLists(){
+  const qs=[...S.questions].sort((a,b)=>(a.order||0)-(b.order||0));
+  $("#questions").innerHTML=qs.map(q=>`<div class="q ${q.answer?"answered":""}"><p>${esc(q.text)}</p><textarea data-q="${q.id}" placeholder="Απάντηση…" aria-label="Απάντηση">${esc(q.answer||"")}</textarea></div>`).join("")||`<p class="empty">Καμία ανοιχτή ερώτηση.</p>`;
+  $("#w-area").innerHTML=AREAS.map(a=>`<option>${a}</option>`).join("");
+  $("#wishes").innerHTML=AREAS.map(a=>{
+    const ws=S.wishes.filter(w=>w.area===a).sort((x,y)=>(x.order||0)-(y.order||0));
+    if(!ws.length) return "";
+    return `<div class="wgroup"><h3>${esc(a)}</h3><ul>${ws.map(w=>`<li>${esc(w.text)} <button data-wdel="${w.id}" aria-label="Αφαίρεση">✕</button></li>`).join("")}</ul></div>`}).join("")||`<p class="empty">Η λίστα είναι άδεια.</p>`;
+}
+
+/* interactions */
+document.addEventListener("click",async e=>{
+  const f=e.target.closest("[data-f]");
+  if(f){filter=f.dataset.f;document.querySelectorAll("[data-f]").forEach(c=>c.setAttribute("aria-pressed",c===f));renderWork();return}
+  const cy=e.target.closest("[data-cycle]");
+  if(cy){e.stopPropagation();const it=S.items.find(i=>i.id===cy.dataset.cycle);if(it)save("items/"+it.id,{...it,status:NEXT[it.status]||"doing"});return}
+  const add=e.target.closest("[data-add]");
+  if(add){openEditor(null,add.dataset.add);return}
+  const row=e.target.closest(".row[data-id]");
+  if(row){openEditor(S.items.find(i=>i.id===row.dataset.id));return}
+  const wd=e.target.closest("[data-wdel]");
+  if(wd&&db){try{await db.doc("wishes/"+wd.dataset.wdel).delete()}catch(err){fail(err)}}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches(".row[data-id]"))openEditor(S.items.find(i=>i.id===e.target.dataset.id));if(e.key==="Escape"&&!$("#scrim").hidden)closeEditor()});
+document.addEventListener("focusout",e=>{
+  const t=e.target.closest?.("textarea[data-q]");if(!t)return;
+  const q=S.questions.find(x=>x.id===t.dataset.q);if(!q||(q.answer||"")===t.value)return;
+  save("questions/"+q.id,{...q,answer:t.value});
+});
+$("#q-add").addEventListener("submit",e=>{e.preventDefault();const v=$("#q-new").value.trim();if(!v)return;
+  const id="q"+Date.now().toString(36);save("questions/"+id,{text:v,answer:"",order:S.questions.length+1});$("#q-new").value=""});
+$("#w-add").addEventListener("submit",e=>{e.preventDefault();const v=$("#w-new").value.trim();if(!v)return;
+  const id="w"+Date.now().toString(36);save("wishes/"+id,{area:$("#w-area").value,text:v,order:S.wishes.length+1});$("#w-new").value=""});
+
+function openEditor(it,phase){
+  editing=it||null;
+  $("#f-phase").innerHTML=PHASES.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("");
+  $("#ed-title").textContent=it?"Εργασία":"Νέα εργασία";
+  $("#f-title").value=it?.title||""; $("#f-phase").value=it?.phase||phase||"p1";
+  $("#f-cat").value=it?.cat||"Υλικά + εργασία"; $("#f-est").value=it?.est??""; $("#f-quote").value=it?.quote??"";
+  $("#f-paid").value=it?.paid||""; $("#f-status").value=it?.status||"todo"; $("#f-by").value=it?.paidBy||"";
+  $("#f-who").value=it?.who||""; $("#f-later").checked=!!it?.later; $("#f-note").value=it?.note||"";
+  $("#ed-del").hidden=!it; $("#ed-del2").hidden=true;
+  $("#scrim").hidden=false; setTimeout(()=>$("#f-title").focus(),30);
+}
+function closeEditor(){$("#scrim").hidden=true;editing=null}
+$("#ed-cancel").addEventListener("click",closeEditor);
+$("#scrim").addEventListener("click",e=>{if(e.target.id==="scrim")closeEditor()});
+$("#ed-del").addEventListener("click",()=>{$("#ed-del2").hidden=false});
+$("#ed-del2").addEventListener("click",async()=>{if(!editing||!db)return;try{await db.doc("items/"+editing.id).delete();closeEditor()}catch(err){fail(err)}});
+$("#editor").addEventListener("submit",e=>{
+  e.preventDefault();
+  const n=v=>v===""?null:Number(v);
+  const phase=$("#f-phase").value;
+  const body={title:$("#f-title").value.trim(),phase,cat:$("#f-cat").value,est:n($("#f-est").value)||0,quote:n($("#f-quote").value),
+    paid:n($("#f-paid").value)||0,status:$("#f-status").value,paidBy:$("#f-by").value,who:$("#f-who").value.trim(),
+    later:$("#f-later").checked,note:$("#f-note").value.trim(),
+    order:editing?.order??(Math.max(0,...S.items.filter(i=>i.phase===phase).map(i=>i.order||0))+1)};
+  const id=editing?.id||("i"+Date.now().toString(36));
+  save("items/"+id,body); closeEditor();
+});
+
+async function save(path,body){
+  if(!db)return;
+  const clean={...body};delete clean.id;
+  try{await db.doc(path).set(clean)}catch(err){fail(err)}
+}
+function fail(err){
+  const c=err?.code;
+  showStatus("Η αλλαγή δεν αποθηκεύτηκε. Έλεγξε τη σύνδεση και δοκίμασε ξανά.");
+}
+
+/* data: Netlify function /api/data, polled every 15 s */
+const api={
+  doc(path){return{
+    set:async data=>{const r=await fetch("/api/data",{method:"PUT",headers:{"content-type":"application/json"},body:JSON.stringify({path,data})});if(!r.ok)throw{code:"unavailable"};refresh(true)},
+    delete:async()=>{const r=await fetch("/api/data?path="+encodeURIComponent(path),{method:"DELETE"});if(!r.ok)throw{code:"unavailable"};refresh(true)}
+  }}
+};
+let loaded=false;
+async function refresh(force){
+  if(!force&&loaded&&document.activeElement&&document.activeElement.matches("textarea,input,select"))return;
+  try{
+    const r=await fetch("/api/data",{cache:"no-store"});if(!r.ok)throw new Error(r.status);
+    const d=await r.json();
+    S.items=d.items||[];S.wishes=d.wishes||[];S.questions=d.questions||[];
+    const m=(d.meta||[]).find(x=>x.id==="project");if(m)S.meta={...S.meta,...m};
+    loaded=true;showStatus("");render();
+  }catch(e){showStatus(loaded?"Δεν υπάρχει σύνδεση. Ό,τι βλέπεις ίσως δεν είναι ενημερωμένο.":"Τα δεδομένα δεν φόρτωσαν. Έλεγξε τη σύνδεση και ανανέωσε τη σελίδα.")}
+}
+db=api;render();refresh(true);
+setInterval(()=>{if(!document.hidden)refresh()},15000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh()});
+</script>
+
+</body>
+</html>
