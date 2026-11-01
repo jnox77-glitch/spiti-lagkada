@@ -149,6 +149,18 @@ const MIGRATIONS = [
         });
     },
   },
+  {
+    id: "2026-11-01-smart-home",
+    async run(store) {
+      if (!(await store.get("items/p6-10", { type: "json" })))
+        await store.setJSON("items/p6-10", {
+          phase: "p6", status: "todo", order: 10, cat: "Υλικά",
+          title: "Έξυπνο σπίτι: κέντρο Home Assistant, ρελέ ρολών ×8, έξυπνα dimmer φωτισμού ×9, 2 Wi-Fi access points, αισθητήρες",
+          est: 1200,
+          note: "Τις συσκευές τις αγοράζουμε εμείς· ο ηλεκτρολόγος βάζει ουδέτερο και βαθιά κουτιά (μελέτη 9). Την εφαρμογή τη φτιάχνουμε μαζί.",
+        });
+    },
+  },
 ];
 
 async function migrate(store) {
