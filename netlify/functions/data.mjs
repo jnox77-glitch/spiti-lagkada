@@ -126,6 +126,17 @@ const MIGRATIONS = [
       });
     },
   },
+  {
+    id: "2026-11-01-topo",
+    async run(store) {
+      const t = (await store.get("items/p1-02", { type: "json" })) || { phase: "p1", status: "todo", order: 2, cat: "Υπηρεσία", est: 500 };
+      await store.setJSON("items/p1-02", {
+        ...t,
+        title: "Συμπλήρωση τοπογραφικού (έγινε για συμβόλαιο) ώστε να καλύπτει την οικοδομική άδεια",
+        note: "Ρωτήστε πρώτα τον τοπογράφο που το έκανε: έχει ήδη τις μετρήσεις.",
+      });
+    },
+  },
 ];
 
 async function migrate(store) {
