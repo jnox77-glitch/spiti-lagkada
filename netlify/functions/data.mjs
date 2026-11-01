@@ -137,6 +137,18 @@ const MIGRATIONS = [
       });
     },
   },
+  {
+    id: "2026-11-01-rolls-screens",
+    async run(store) {
+      if (!(await store.get("items/p5-07", { type: "json" })))
+        await store.setJSON("items/p5-07", {
+          phase: "p5", status: "todo", order: 4.5, cat: "Υλικά + εργασία",
+          title: "Εξωτερικά ρολά με μοτέρ ×8 (τζαμαρία, Σ2/Σ3, κουζίνα ×2, υπνοδωμάτια ×3) + σίτες σε όλα τα ανοιγόμενα",
+          est: 4500,
+          note: "Ρολά ~3.500 € (κουτιά χωνευτά στη θερμοπρόσοψη) + σίτες ~1.000 €. Εκτίμηση μέχρι την προσφορά του αλουμινά.",
+        });
+    },
+  },
 ];
 
 async function migrate(store) {
