@@ -15,16 +15,42 @@ const json = (body, status = 200) =>
 // One-off data fixes, applied once on the next read and recorded in meta/migrations.
 const MIGRATIONS = [
   {
+    // Superseded by the next one (the 700 € was fire detection, not the alarm); kept so it never re-runs out of order.
     id: "2026-11-01-alarm",
+    async run() {},
+  },
+  {
+    id: "2026-11-01-budget-petros",
     async run(store) {
-      const key = "items/p6-06";
-      const it = (await store.get(key, { type: "json" })) || {};
-      await store.setJSON(key, {
-        phase: "p6", status: "todo", order: 6, est: 900, cat: "Υλικά + εργασία",
-        ...it,
-        title: "Συναγερμός Olympia Electronics (βασικό σετ) + πέρασμα γραμμών",
+      const patch = async (key, base, changes) => {
+        const it = (await store.get(key, { type: "json" })) || base;
+        await store.setJSON(key, { ...it, ...changes });
+      };
+      const p6 = (order, est) => ({ phase: "p6", status: "todo", order, est, cat: "Υλικά + εργασία" });
+      await patch("items/p6-04", p6(4, 5500), {
+        title: "Ηλεκτρολογικά σύνολο: καλωδιώσεις, πίνακας, πρίζες, διακόπτες, κρυφός φωτισμός LED, προεγκατάσταση συναγερμού",
+        quote: 5000,
+        note: "Υλικά + εργασία, όλο το σπίτι.",
+      });
+      await patch("items/p6-05", p6(5, 1800), {
+        title: "Φωτισμός LED — μέσα στα ηλεκτρολογικά (5.000 €)",
+        quote: 0,
+      });
+      await patch("items/p6-06", p6(6, 900), {
+        title: "Συναγερμός Ajax (ασύρματος) — αργότερα",
+        quote: 600,
+        later: true,
+        note: "Τώρα μόνο προεγκατάσταση, μέσα στα ηλεκτρολογικά.",
+      });
+      await patch("items/p6-09", p6(9, 700), {
+        title: "Πυρανίχνευση Olympia Electronics (βασικό σετ) + γραμμές από μάστορα",
         quote: 700,
-        note: "Σετ ~500 € + εργατικά μάστορα για τις γραμμές 200 €. Κάμερες εκτός.",
+        note: "Σετ ~500 € + εργατικά 200 €.",
+      });
+      await patch("items/p6-08", p6(8, 3500), {
+        title: "Υδραυλικά & αποχετεύσεις εσωτερικά",
+        quote: 2000,
+        note: "Υλικά + εργασία.",
       });
     },
   },
