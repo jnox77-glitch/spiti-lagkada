@@ -12,6 +12,32 @@ const json = (body, status = 200) =>
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
   });
 
+// One-off data fixes, applied once on the next read and recorded in meta/migrations.
+const MIGRATIONS = [
+  {
+    id: "2026-11-01-alarm",
+    async run(store) {
+      const key = "items/p6-06";
+      const it = (await store.get(key, { type: "json" })) || {};
+      await store.setJSON(key, {
+        phase: "p6", status: "todo", order: 6, est: 900, cat: "Υλικά + εργασία",
+        ...it,
+        title: "Συναγερμός Olympia Electronics (βασικό σετ) + πέρασμα γραμμών",
+        quote: 700,
+        note: "Σετ ~500 € + εργατικά μάστορα για τις γραμμές 200 €. Κάμερες εκτός.",
+      });
+    },
+  },
+];
+
+async function migrate(store) {
+  const done = (await store.get("meta/migrations", { type: "json" })) || { applied: [] };
+  const todo = MIGRATIONS.filter((m) => !done.applied.includes(m.id));
+  if (!todo.length) return;
+  for (const m of todo) await m.run(store);
+  await store.setJSON("meta/migrations", { applied: [...done.applied, ...todo.map((m) => m.id)] });
+}
+
 async function readAll(store) {
   const { blobs } = await store.list();
   if (blobs.length === 0) {
@@ -34,7 +60,11 @@ async function readAll(store) {
 export default async (req) => {
   const store = getStore(STORE);
   try {
-    if (req.method === "GET") return json(await readAll(store));
+    if (req.method === "GET") {
+      await readAll(store);
+      await migrate(store);
+      return json(await readAll(store));
+    }
 
     if (req.method === "PUT") {
       const { path, data } = await req.json();
