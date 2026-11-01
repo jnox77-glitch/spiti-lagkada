@@ -89,6 +89,25 @@ const MIGRATIONS = [
       });
     },
   },
+  {
+    id: "2026-11-01-split-etics",
+    async run(store) {
+      const key = "items/p5-01";
+      const it = (await store.get(key, { type: "json" })) || { phase: "p5", status: "todo", order: 1, cat: "Υλικά + εργασία" };
+      await store.setJSON(key, {
+        ...it,
+        title: "Εξωτερικοί τοίχοι ξηράς δόμησης ~115 τ.μ. (σκελετός, τσιμεντοσανίδα, ορυκτοβάμβακας, γυψοσανίδα από μέσα)",
+        est: 7000,
+      });
+      if (!(await store.get("items/p5-06", { type: "json" })))
+        await store.setJSON("items/p5-06", {
+          phase: "p5", status: "todo", order: 1.5, cat: "Υλικά + εργασία",
+          title: "Θερμοπρόσοψη ETICS ~125 τ.μ.: 8 εκ. EPS γραφίτη, μαζί με κολώνες, δοκούς, στηθαία, σιλικονούχος σοβάς",
+          est: 5500,
+          note: "Χωριστό συνεργείο από την ξηρά δόμηση.",
+        });
+    },
+  },
 ];
 
 async function migrate(store) {
