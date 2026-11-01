@@ -108,6 +108,24 @@ const MIGRATIONS = [
         });
     },
   },
+  {
+    id: "2026-11-01-pergola-later",
+    async run(store) {
+      const f = (await store.get("items/p7-01", { type: "json" })) || { phase: "p7", status: "todo", order: 1, cat: "Υλικά + εργασία", est: 4000 };
+      await store.setJSON("items/p7-01", {
+        ...f,
+        title: "Δάπεδα 60×120 γκρι ~89 τ.μ. εσωτερικά + τοποθέτηση (χωρίς πέργκολα)",
+        est: Math.max(0, Number(f.est || 0) - 500),
+      });
+      const pg = (await store.get("items/p8-05", { type: "json" })) || { phase: "p8", status: "todo", order: 5, cat: "Υλικά + εργασία", est: 3000 };
+      await store.setJSON("items/p8-05", {
+        ...pg,
+        title: "Πέργκολα σαλονιού + δάπεδο πέργκολας (ίδιο πλακάκι R11, ~12,5 τ.μ.)",
+        est: Number(pg.est || 0) + 500,
+        later: true,
+      });
+    },
+  },
 ];
 
 async function migrate(store) {
