@@ -54,6 +54,24 @@ const MIGRATIONS = [
       });
     },
   },
+  {
+    id: "2026-11-01-plumbing-doors",
+    async run(store) {
+      const patch = async (key, base, changes) => {
+        const it = (await store.get(key, { type: "json" })) || base;
+        await store.setJSON(key, { ...it, ...changes });
+      };
+      await patch("items/p6-08", { phase: "p6", status: "todo", order: 8, est: 3500, cat: "Υλικά + εργασία" }, {
+        title: "Υδραυλικά & αποχετεύσεις εσωτερικά",
+        quote: 3500,
+        note: "Υλικά + εργασία.",
+      });
+      await patch("items/p7-08", { phase: "p7", status: "todo", order: 8, est: 2000, cat: "Υλικά + εργασία" }, {
+        title: "Εσωτερικές πόρτες ×4 με τοποθέτηση",
+        quote: 1200,
+      });
+    },
+  },
 ];
 
 async function migrate(store) {
