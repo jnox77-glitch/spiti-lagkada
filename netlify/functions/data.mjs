@@ -72,6 +72,23 @@ const MIGRATIONS = [
       });
     },
   },
+  {
+    id: "2026-11-01-kitchen",
+    async run(store) {
+      const patch = async (key, base, changes) => {
+        const it = (await store.get(key, { type: "json" })) || base;
+        await store.setJSON(key, { ...it, ...changes });
+      };
+      await patch("items/p7-02", { phase: "p7", status: "todo", order: 2, est: 6000, cat: "Υλικά + εργασία" }, {
+        title: "Κουζίνα: ντουλάπια & πάγκος",
+        quote: 3500,
+      });
+      await patch("items/p7-03", { phase: "p7", status: "todo", order: 3, est: 2500, cat: "Υλικά" }, {
+        title: "Ηλεκτρικές συσκευές κουζίνας — τις έχουμε",
+        quote: 0,
+      });
+    },
+  },
 ];
 
 async function migrate(store) {
