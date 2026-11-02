@@ -179,7 +179,7 @@ a.btn{text-decoration:none;display:inline-block}
     <div class="brand">
       <h1>Σπίτι Λαγκαδά</h1>
       <span class="sub"><a href="/3d.html" style="color:var(--accent);font-weight:600;text-decoration:none">Δες το 3D →</a></span>
-      <span class="sub" id="subline">Οικόπεδο 1.100 τ.μ. · Σύμμικτη κατασκευή ~93 τ.μ. · Ισόγειο</span>
+      <span class="sub" id="subline">Οικόπεδο 06α · 1.156 τ.μ. · Σύμμικτη κατασκευή ~93 τ.μ. · Ισόγειο</span>
     </div>
     <nav class="tabs" role="tablist">
       <button role="tab" data-tab="overview" aria-selected="true">Επισκόπηση</button>
@@ -364,71 +364,75 @@ a.btn{text-decoration:none;display:inline-block}
     </div>
 
     <div class="draw">
-      <h2>Διάταξη οικοπέδου · πρόταση v1</h2>
-      <p class="note">Σχηματικά, με υπόθεση 25 × 44 μ. Θα διορθωθεί με το τοπογραφικό.</p>
+      <h2>Διάταξη οικοπέδου 06α · πρόταση v2</h2>
+      <p class="note">Από το τοπογραφικό του 2018: πρόσοψη 20,51 μ. στην ανώνυμη οδό, βάθος ~51–56 μ., 1.156 τ.μ. Το σχήμα είναι απλοποιημένο σε ορθογώνιο· τα ακριβή όρια και οι όροι δόμησης από τον μηχανικό.</p>
       <div class="svgbox">
-      <svg viewBox="0 0 330 520" role="img" aria-label="Διάταξη οικοπέδου">
-        <g transform="translate(40,30)">
-          <rect x="-40" y="-30" width="330" height="26" fill="var(--road)"/>
-          <text x="125" y="-12" text-anchor="middle" font-size="10" fill="var(--muted)">Δρόμος</text>
-          <rect x="0" y="0" width="250" height="440" fill="var(--plot)" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 3"/>
-          <!-- driveway & gate -->
-          <rect x="20" y="0" width="40" height="40" fill="var(--road)" opacity=".7"/>
-          <line x1="18" y1="0" x2="62" y2="0" stroke="var(--accent)" stroke-width="4"/>
+      <svg viewBox="0 0 300 560" role="img" aria-label="Διάταξη οικοπέδου 06α">
+        <g transform="translate(50,36)">
+          <rect x="-50" y="-36" width="300" height="30" fill="var(--road)"/>
+          <text x="82" y="-17" text-anchor="middle" font-size="9.5" fill="var(--muted)">Οδός Ανώνυμη · απέναντι πλατεία</text>
+          <rect x="0" y="0" width="164" height="451" fill="var(--plot)" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 3"/>
+          <text x="-14" y="225" font-size="7.5" fill="var(--muted)" text-anchor="middle" transform="rotate(-90 -14 225)">όμορο 01–02</text>
+          <text x="178" y="300" font-size="7.5" fill="var(--muted)" text-anchor="middle" transform="rotate(90 178 300)">όμορο 08Ν</text>
+          <text x="82" y="463" font-size="7.5" fill="var(--muted)" text-anchor="middle">όμορο 06β · 06γ</text>
+          <!-- gates & walk -->
+          <line x1="70.8" y1="0" x2="83.6" y2="0" stroke="var(--accent)" stroke-width="4"/>
+          <line x1="95.6" y1="0" x2="155.6" y2="0" stroke="var(--accent)" stroke-width="4"/>
+          <rect x="70.8" y="0" width="12.8" height="64" fill="var(--road)" opacity=".7"/>
           <!-- carport -->
-          <rect x="10" y="40" width="84" height="55" fill="var(--sunk)" stroke="var(--wall)" stroke-width="1.2"/>
-          <g stroke="var(--muted)" stroke-width=".8"><line x1="38" y1="40" x2="38" y2="95"/><line x1="66" y1="40" x2="66" y2="95"/></g>
-          <text x="52" y="66" text-anchor="middle" font-size="8.5" font-weight="600">Σκεπαστό</text>
-          <text x="52" y="77" text-anchor="middle" font-size="8.5" font-weight="600">πάρκινγκ ×3</text>
+          <rect x="89.2" y="2.4" width="72.8" height="44.0" fill="var(--sunk)" stroke="var(--wall)" stroke-width="1.2"/>
+          <g stroke="var(--muted)" stroke-width=".8"><line x1="113.2" y1="2.4" x2="113.2" y2="46.4"/><line x1="137.2" y1="2.4" x2="137.2" y2="46.4"/></g>
+          <text x="125.6" y="22.4" text-anchor="middle" font-size="8" font-weight="600">Σκεπαστό</text>
+          <text x="125.6" y="32.0" text-anchor="middle" font-size="8" font-weight="600">πάρκινγκ ×3</text>
           <!-- house -->
-          <rect x="104" y="40" width="126" height="74" fill="var(--surface)" stroke="var(--wall)" stroke-width="2"/>
-          <text x="165" y="76" text-anchor="middle" font-size="10" font-weight="700">Σπίτι</text>
-          <text x="165" y="88" text-anchor="middle" font-size="8" fill="var(--muted)">93 τ.μ. · Φ/Β στην ταράτσα</text>
-          <line x1="133" y1="40" x2="141" y2="40" stroke="var(--accent)" stroke-width="3"/>
-          <rect x="190" y="30" width="12" height="8" fill="var(--muted)"/>
-          <text x="205" y="27" font-size="7" fill="var(--muted)">αντλία θ.</text>
-          <!-- pergola -->
-          <rect x="110" y="114" width="50" height="25" fill="none" stroke="var(--muted)" stroke-dasharray="3 2"/>
-          <text x="135" y="130" text-anchor="middle" font-size="7.5" fill="var(--muted)">πέργκολα</text>
-          <!-- tank -->
-          <rect x="175" y="122" width="34" height="22" rx="4" fill="var(--water)" stroke="var(--muted)" stroke-dasharray="3 2"/>
-          <text x="192" y="136" text-anchor="middle" font-size="7">δεξαμενή</text>
-          <text x="192" y="154" text-anchor="middle" font-size="6.5" fill="var(--muted)">όμβρια ~10 m³</text>
-          <!-- path -->
-          <path d="M140 139 C140 170 90 175 75 195" fill="none" stroke="var(--road)" stroke-width="4"/>
-          <!-- kiosk & mulberries -->
-          <circle cx="35" cy="170" r="26" fill="var(--tree)" opacity=".75"/>
-          <circle cx="95" cy="170" r="26" fill="var(--tree)" opacity=".75"/>
-          <rect x="40" y="185" width="50" height="45" fill="var(--surface)" stroke="var(--wall)" stroke-width="1.2"/>
-          <text x="65" y="205" text-anchor="middle" font-size="8.5" font-weight="600">Κιόσκι</text>
-          <text x="65" y="217" text-anchor="middle" font-size="8">+ BBQ</text>
-          <text x="65" y="140" text-anchor="middle" font-size="7" fill="var(--muted)">πλατανομουριές</text>
+          <rect x="31.6" y="64" width="100.8" height="59.2" fill="var(--surface)" stroke="var(--wall)" stroke-width="2"/>
+          <text x="82.0" y="91.2" text-anchor="middle" font-size="10" font-weight="700">Σπίτι</text>
+          <text x="82.0" y="101.6" text-anchor="middle" font-size="7.5" fill="var(--muted)">93 τ.μ. · Φ/Β στην ταράτσα</text>
+          <line x1="74.0" y1="64" x2="81.2" y2="64" stroke="var(--accent)" stroke-width="3"/>
+          <rect x="110.0" y="57.2" width="8" height="6" fill="var(--muted)"/>
+          <text x="100.4" y="55.2" font-size="6.5" fill="var(--muted)" text-anchor="end">αντλία θ.</text>
+          <!-- pergola, tank -->
+          <rect x="31.6" y="123.2" width="40" height="20.0" fill="none" stroke="var(--muted)" stroke-dasharray="3 2"/>
+          <text x="51.6" y="135.2" text-anchor="middle" font-size="7" fill="var(--muted)">πέργκολα</text>
+          <rect x="86.8" y="129.6" width="27.2" height="17.6" rx="3" fill="var(--water)" stroke="var(--muted)" stroke-dasharray="3 2"/>
+          <text x="100.4" y="140.8" text-anchor="middle" font-size="6.5">δεξαμενή</text>
+          <!-- path to kiosk -->
+          <path d="M79.6 148.8 C95.6 176 119.6 184 133.2 224" fill="none" stroke="var(--road)" stroke-width="3.5"/>
+          <!-- veg -->
+          <g fill="var(--surface)" stroke="var(--accent)" stroke-width="1"><rect x="11.6" y="176.0" width="60.8" height="8.8"/><rect x="11.6" y="190.4" width="60.8" height="8.8"/><rect x="11.6" y="204.8" width="60.8" height="8.8"/><rect x="11.6" y="219.2" width="60.8" height="8.8"/></g>
+          <text x="42.0" y="243.2" text-anchor="middle" font-size="8" font-weight="600">Λαχανόκηπος</text>
+          <!-- kiosk + mulberries -->
+          <circle cx="119.6" cy="212.0" r="22" fill="var(--tree)" opacity=".75"/>
+          <circle cx="151.6" cy="212.0" r="22" fill="var(--tree)" opacity=".75"/>
+          <rect x="111.6" y="224" width="43.2" height="38.4" fill="var(--surface)" stroke="var(--wall)" stroke-width="1.2"/>
+          <text x="133.2" y="241.6" text-anchor="middle" font-size="8" font-weight="600">Κιόσκι</text>
+          <text x="133.2" y="251.2" text-anchor="middle" font-size="7.5">+ BBQ</text>
+          <text x="135.6" y="187.2" text-anchor="middle" font-size="6.5" fill="var(--muted)">πλατανομουριές</text>
           <!-- lawn -->
-          <text x="125" y="265" text-anchor="middle" font-size="9" fill="var(--muted)">γκαζόν / παιχνίδι</text>
-          <!-- veg garden -->
-          <g fill="var(--surface)" stroke="var(--accent)" stroke-width="1">
-            <rect x="150" y="190" width="80" height="14"/><rect x="150" y="210" width="80" height="14"/><rect x="150" y="230" width="80" height="14"/><rect x="150" y="250" width="80" height="14"/>
-          </g>
-          <text x="190" y="280" text-anchor="middle" font-size="8.5" font-weight="600">Λαχανόκηπος</text>
+          <text x="82" y="296" text-anchor="middle" font-size="8.5" fill="var(--muted)">γκαζόν / παιχνίδι</text>
           <!-- orchard -->
-          <g fill="var(--tree)">
-            <circle cx="40" cy="330" r="11"/><circle cx="95" cy="330" r="11"/><circle cx="150" cy="330" r="11"/><circle cx="205" cy="330" r="11"/>
-            <circle cx="67" cy="375" r="11"/><circle cx="122" cy="375" r="11"/><circle cx="177" cy="375" r="11"/>
-          </g>
-          <text x="125" y="408" text-anchor="middle" font-size="9" font-weight="600">Οπωροφόρα</text>
+          <g fill="var(--tree)"><circle cx="19.6" cy="328" r="9"/><circle cx="59.6" cy="328" r="9"/><circle cx="99.6" cy="328" r="9"/><circle cx="139.6" cy="328" r="9"/><circle cx="39.6" cy="364.0" r="9"/><circle cx="79.6" cy="364.0" r="9"/><circle cx="119.6" cy="364.0" r="9"/></g>
+          <text x="82" y="388.8" text-anchor="middle" font-size="8.5" font-weight="600">Οπωροφόρα</text>
           <!-- shed -->
-          <rect x="10" y="412" width="40" height="22" fill="var(--sunk)" stroke="var(--wall)" stroke-width="1"/>
-          <text x="30" y="426" text-anchor="middle" font-size="6.5">κομπόστ/εργαλεία</text>
+          <rect x="3.6" y="419.2" width="32" height="17" fill="var(--sunk)" stroke="var(--wall)" stroke-width="1"/>
+          <text x="19.6" y="429.6" text-anchor="middle" font-size="6">κομπόστ/εργαλεία</text>
           <!-- dims -->
-          <text x="125" y="456" text-anchor="middle" font-size="8" fill="var(--muted)">~25 μ.</text>
-          <text x="262" y="220" font-size="8" fill="var(--muted)" transform="rotate(90 262 220)">~44 μ.</text>
+          <text x="82" y="474" text-anchor="middle" font-size="8" fill="var(--muted)">20,51 μ. πρόσοψη · ~56 μ. βάθος · 1.156 τ.μ.</text>
+          <!-- north arrow: real north is 42,5° clockwise from the top of the drawing -->
+          <g transform="translate(222,40) rotate(42.5)">
+            <circle r="15" fill="var(--surface)" stroke="var(--line)"/>
+            <path d="M0 -12 L5 5 L0 1 L-5 5 Z" fill="var(--fg)"/>
+            <text y="-17" text-anchor="middle" font-size="9" font-weight="700" transform="rotate(-42.5 0 -21)">Β</text>
+          </g>
+          <text x="222" y="80" text-anchor="middle" font-size="6.5" fill="var(--muted)">τζαμαρία → ΝΑ</text>
         </g>
       </svg>
       </div>
       <ul class="assume">
-        <li>Οι πλατανομουριές μπαίνουν ~6 μ. από σπίτι και δεξαμενή, νότια του κιοσκιού για ίσκιο το απόγευμα.</li>
-        <li>Η δεξαμενή κάθεται κοντά στο σπίτι, ώστε οι υδρορροές να έρχονται με μικρή διαδρομή, και κοντά στον λαχανόκηπο.</li>
-        <li>Η εξωτερική μονάδα της αντλίας θερμότητας πάει βόρεια, μακριά από υπνοδωμάτια και κιόσκι.</li>
+        <li>Το σπίτι κάθεται παράλληλα στον δρόμο, ~8 μ. μέσα από τη ρυμοτομική γραμμή: η είσοδος και η κουζίνα κοιτάνε τον δρόμο (ΒΔ), η τζαμαρία και τα υπνοδωμάτια τον κήπο (ΝΑ, ~42° ανατολικά του νότου).</li>
+        <li>Στα πλάγια μένουν ~3,95 μ. ανά πλευρά (20,51 − 12,6). Ο τυφλός πλέον δυτικός τοίχος με το τζάκι κοιτάζει ΝΔ, εκεί που χτυπάει ο απογευματινός ήλιος.</li>
+        <li>Το σκεπαστό πάρκινγκ πάει μπροστά, στη βορειοανατολική πλευρά, με συρόμενη αυλόπορτα· δίπλα η πόρτα πεζών και ο διάδρομος ως την είσοδο.</li>
+        <li>Πίσω από το σπίτι μένουν ~41 μ. κήπου: πέργκολα, δεξαμενή κοντά στις υδρορροές, λαχανόκηπος στον ήλιο, κιόσκι με πλατανομουριές στην ανατολική πλευρά, οπωροφόρα στο βάθος.</li>
         <li>Οι αποστάσεις από τα όρια (Δ) θα κλειδώσουν από τον μηχανικό.</li>
       </ul>
     </div>
